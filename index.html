@@ -4,25 +4,20 @@
     <meta charset="utf-8" />
     <title>Pandoc WASM DOCX to HTML Demo</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script type="module" crossorigin src="/pandoc-webapp/assets/index-BGS0YEsc.js"></script>
-    <link rel="stylesheet" crossorigin href="/pandoc-webapp/assets/index-DzTeI9Dy.css">
+    <script type="module" crossorigin src="/pandoc-webapp/assets/index-3GrBLNTS.js"></script>
+    <link rel="stylesheet" crossorigin href="/pandoc-webapp/assets/index-KmJIdNur.css">
   </head>
 
   <body
     class="flex flex-col items-center justify-center min-h-[100dvh] w-[100dvw]"
   >
-    <header class="text-center mb-3 w-full mt-10">
-      <h1 class="text-8xl font-bold font-[WDXL_Lubrifont_TC]">
+    <header class="text-center w-full mt-10">
+      <h1 class="lg:text-8xl text-5xl font-bold font-[WDXL_Lubrifont_TC]">
         .docx to .html converter
       </h1>
-      <button
-        class="btn btn-neutral btn-soft mt-4"
-        onclick="document.querySelector('dialog').showModal()"
-      >
-        View Instructions
-      </button>
     </header>
-    <dialog class="modal">
+
+    <dialog class="modal" id="instructions-modal">
       <div class="modal-box max-w-3xl">
         <h1 class="text-4xl font-bold mb-4">Instructions</h1>
         <p class="text-lg mb-2 text-left">
@@ -44,7 +39,9 @@
 
         <div class="modal-action">
           <button
-            class="btn btn-ghost"
+            class="btn active:scale-[97%] btn-ghost"
+            id="dialog-btn"
+            type="button"
             onclick="document.querySelector('dialog').close()"
           >
             OK
@@ -52,28 +49,95 @@
         </div>
       </div>
     </dialog>
+
+    <dialog class="modal" id="success-modal">
+      <div class="modal-box max-w-3xl">
+        <h1 class="text-4xl font-bold mb-4">Copied successfully!</h1>
+
+        <div class="modal-action">
+          <button
+            class="btn active:scale-[97%] btn-ghost"
+            id="dialog-btn"
+            type="button"
+            onclick="document.querySelector('#success-modal').close()"
+          >
+            OK
+          </button>
+        </div>
+      </div>
+    </dialog>
+
     <main
       class="md:w-9/12 w-11/12 text-center flex flex-col items-center justify-center"
     >
       <div
         class="w-11/12 md:w-9/12 flex flex-col items-center justify-center mt-8"
       >
-        <input
-          type="file"
-          id="upload"
-          accept=".docx"
-          class="file-input w-full"
-        />
+        <form id="upload-form" class="space-y-3">
+          <input
+            type="file"
+            id="upload"
+            accept=".docx"
+            class="file-input w-full"
+          />
+          <button
+            id="instructions"
+            class="btn active:scale-[97%] btn-neutral btn-soft w-full"
+            onclick="document.querySelector('dialog').showModal()"
+          >
+            View Instructions
+          </button>
+          <button
+            class="btn active:scale-[97%] w-full btn-neutral btn-soft disabled"
+            id="form-convert"
+            disabled
+          >
+            Convert
+          </button>
+        </form>
+
         <textarea
           id="output"
           rows="20"
           cols="80"
           readonly
           resize="none"
-          class="textarea w-full mt-4"
+          class="textarea hidden w-full mt-4 font-[IBM_Plex_Mono] text-left"
         ></textarea>
 
-        <button class="btn btn-neutral soft mt-4 w-full">Copy HTML</button>
+        <div
+          id="btn-group"
+          class="w-full mt-4 hidden flex-col items-center space-y-2"
+        >
+          <div class="grid grid-cols-3 w-full">
+            <button
+              id="minify"
+              class="btn active:scale-[97%] btn-neutral soft mr-1"
+            >
+              Minify
+            </button>
+            <button
+              id="copy"
+              class="btn active:scale-[97%] btn-neutral soft mx-1"
+            >
+              Copy HTML
+            </button>
+            <button
+              id="download"
+              class="btn active:scale-[97%] btn-neutral soft ml-1"
+            >
+              Download HTML
+            </button>
+          </div>
+          <div class="w-full">
+            <button
+              class="btn active:scale-[97%] btn-neutral soft w-full"
+              id="convert-another"
+            >
+              Convert another file
+            </button>
+          </div>
+        </div>
       </div>
     </main>
     <footer class="text-center mt-8">
