@@ -10,16 +10,16 @@
   <body
     class="flex flex-col items-center justify-center min-h-[100dvh] w-[100dvw]"
   >
-    <header class="text-center mb-3 w-full mt-10">
-      <h1 class="text-8xl font-bold font-[WDXL_Lubrifont_TC]">
+    <header class="text-center w-full mt-10">
+      <h1 class="lg:text-8xl text-5xl font-bold font-[WDXL_Lubrifont_TC]">
         .docx to .html converter
       </h1>
-      <button
-        class="btn btn-neutral btn-soft mt-4"
+      <!-- <button
+        class="btn active:scale-[97%] btn-neutral btn-soft"
         onclick="document.querySelector('dialog').showModal()"
       >
         View Instructions
-      </button>
+      </button> -->
     </header>
     <dialog class="modal">
       <div class="modal-box max-w-3xl">
@@ -43,7 +43,7 @@
 
         <div class="modal-action">
           <button
-            class="btn btn-ghost"
+            class="btn active:scale-[97%] btn-ghost"
             onclick="document.querySelector('dialog').close()"
           >
             OK
@@ -57,22 +57,58 @@
       <div
         class="w-11/12 md:w-9/12 flex flex-col items-center justify-center mt-8"
       >
-        <input
-          type="file"
-          id="upload"
-          accept=".docx"
-          class="file-input w-full"
-        />
+        <form id="upload-form">
+          <input
+            type="file"
+            id="upload"
+            accept=".docx"
+            class="file-input w-full"
+          />
+          <button class="btn active:scale-[97%] mt-4 w-full">Convert</button>
+        </form>
+
         <textarea
           id="output"
           rows="20"
           cols="80"
           readonly
           resize="none"
-          class="textarea w-full mt-4"
+          class="textarea hidden w-full mt-4"
         ></textarea>
 
-        <button class="btn btn-neutral soft mt-4 w-full">Copy HTML</button>
+        <div
+          id="btn-group"
+          class="w-full mt-1 hidden flex-col items-center space-y-2"
+        >
+          <div class="grid grid-cols-3 w-full">
+            <button
+              disabled
+              class="btn active:scale-[97%] btn-neutral soft mr-1"
+            >
+              Minify
+            </button>
+            <button
+              disabled
+              class="btn active:scale-[97%] btn-neutral soft mx-1"
+            >
+              Copy HTML
+            </button>
+            <button
+              disabled
+              class="btn active:scale-[97%] btn-neutral soft ml-1"
+            >
+              Download HTML
+            </button>
+          </div>
+          <div class="w-full">
+            <button
+              class="btn active:scale-[97%] btn-neutral soft w-full"
+              id="convert-another"
+            >
+              Convert another file
+            </button>
+          </div>
+        </div>
       </div>
     </main>
     <footer class="text-center mt-8">
