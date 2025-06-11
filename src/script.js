@@ -6,12 +6,34 @@ import {
   PreopenDirectory,
 } from "@bjorn3/browser_wasi_shim";
 
-const outputPre = document.getElementById("output");
+const form = document.getElementById("upload-form");
+const output = document.getElementById("output");
 const fileInput = document.getElementById("upload");
+const btnGroup = document.getElementById("btn-group");
+const convertAnotherBtn = document.getElementById("convert-another");
 
-fileInput.addEventListener("change", async (event) => {
-  const file = event.target.files[0];
+convertAnotherBtn.addEventListener("click", () => {
+  form.classList.remove("hidden");
+  form.classList.add("flex");
+  output.classList.add("hidden");
+  output.textContent = "";
+  btnGroup.classList.add("hidden");
+  btnGroup.classList.remove("flex");
+
+  // Replace the file input
+  const newFileInput = fileInput.cloneNode(true);
+  fileInput.parentNode.replaceChild(newFileInput, fileInput);
+  fileInput = newFileInput; // Update reference
+});
+
+form.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  output.textContent = ""; // Clear previous output
+
+  const file = fileInput.files[0];
   if (!file) return;
+
+  output.classList.add("hidden");
 
   const inputBytes = new Uint8Array(await file.arrayBuffer());
 
@@ -29,10 +51,10 @@ fileInput.addEventListener("change", async (event) => {
   const fds = [
     new OpenFile(new File(new Uint8Array(), { readonly: true })), // stdin
     ConsoleStdout.lineBuffered(
-      (msg) => (outputPre.textContent += `[stdout] ${msg}\n`)
+      (msg) => (output.textContent += `[stdout] ${msg}\n`)
     ),
     ConsoleStdout.lineBuffered(
-      (msg) => (outputPre.textContent += `[stderr] ${msg}\n`)
+      (msg) => (output.textContent += `[stderr] ${msg}\n`)
     ),
     new PreopenDirectory("/", [
       ["in", inputFile],
@@ -92,10 +114,18 @@ fileInput.addEventListener("change", async (event) => {
 
   // 7. Read the output from the virtual output file
   const htmlData = outputFile.data;
+
+  output.classList.remove("hidden");
+  btnGroup.classList.remove("hidden");
+  btnGroup.classList.add("flex");
+
+  form.classList.add("hidden");
+  form.classList.remove("flex");
+
   if (htmlData && htmlData.length > 0) {
     const htmlString = new TextDecoder("utf-8").decode(htmlData);
-    outputPre.textContent += "\n--- OUTPUT FILE ---\n" + htmlString;
+    output.textContent += "\n--- OUTPUT FILE ---\n" + htmlString;
   } else {
-    outputPre.textContent += "\n--- NO OUTPUT FILE DATA ---\n";
+    output.textContent += "\n--- NO OUTPUT FILE DATA ---\n";
   }
 });
