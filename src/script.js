@@ -45,7 +45,7 @@ fileInput.addEventListener("change", async (event) => {
   // 3. Load WASI and instantiate WASM
   const wasi = new WASI(wasiArgs, [], fds, { debug: false });
   const { instance } = await WebAssembly.instantiateStreaming(
-    fetch("/pandoc.wasm"),
+    fetch("https://tweag.github.io/pandoc-wasm/pandoc.wasm"),
     { wasi_snapshot_preview1: wasi.wasiImport }
   );
 
