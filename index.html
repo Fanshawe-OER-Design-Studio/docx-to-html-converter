@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Pandoc WASM DOCX to HTML Demo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script type="module" crossorigin src="/assets/index-CJKkf1VI.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-DzTeI9Dy.css">
+  </head>
+
+  <body
+    class="flex flex-col items-center justify-center min-h-[100dvh] w-[100dvw]"
+  >
+    <header class="text-center mb-3 w-full mt-10">
+      <h1 class="text-8xl font-bold font-[WDXL_Lubrifont_TC]">
+        .docx to .html converter
+      </h1>
+      <button
+        class="btn btn-neutral btn-soft mt-4"
+        onclick="document.querySelector('dialog').showModal()"
+      >
+        View Instructions
+      </button>
+    </header>
+    <dialog class="modal">
+      <div class="modal-box max-w-3xl">
+        <h1 class="text-4xl font-bold mb-4">Instructions</h1>
+        <p class="text-lg mb-2 text-left">
+          This tool allows you to convert a .docx file to HTML using Pandoc
+          WASM.
+        </p>
+        <ol class="list-decimal list-inside text-lg mb-4 text-left">
+          <li>
+            Click the "Choose File" button to select a .docx file from your
+            computer.
+          </li>
+          <li>
+            After selecting the file, the content will be automatically
+            converted to HTML.
+          </li>
+
+          <li>Copy the HTML content from the text area for your use.</li>
+        </ol>
+
+        <div class="modal-action">
+          <button
+            class="btn btn-ghost"
+            onclick="document.querySelector('dialog').close()"
+          >
+            OK
+          </button>
+        </div>
+      </div>
+    </dialog>
+    <main
+      class="md:w-9/12 w-11/12 text-center flex flex-col items-center justify-center"
+    >
+      <div
+        class="w-11/12 md:w-9/12 flex flex-col items-center justify-center mt-8"
+      >
+        <input
+          type="file"
+          id="upload"
+          accept=".docx"
+          class="file-input w-full"
+        />
+        <textarea
+          id="output"
+          rows="20"
+          cols="80"
+          readonly
+          resize="none"
+          class="textarea w-full mt-4"
+        ></textarea>
+
+        <button class="btn btn-neutral soft mt-4 w-full">Copy HTML</button>
+      </div>
+    </main>
+    <footer class="text-center mt-8">
+      <p>
+        Made by Jason Benoit and Aaron Po for the OER Design Studio at Fanshawe
+        College.
+      </p>
+
+      <p>
+        This project is open source and available on
+        <a href="#" class="text-blue-500 hover:underline">GitHub</a>. It is
+        licensed under the MIT License.
+      </p>
+    </footer>
+
+  </body>
+</html>
