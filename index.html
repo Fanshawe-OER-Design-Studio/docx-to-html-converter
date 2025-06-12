@@ -7,31 +7,18 @@
     <link rel="stylesheet" href="./src/styles.css" />
   </head>
 
-  <body
-    class="flex flex-col items-center justify-center min-h-[100dvh] w-[100dvw]"
-  >
+  <body class="flex flex-col items-center justify-center min-h-[100dvh] w-[100dvw]">
     <header class="text-center w-full mt-10">
-      <h1 class="lg:text-8xl text-5xl font-bold font-[WDXL_Lubrifont_TC]">
-        .docx to .html converter
-      </h1>
+      <h1 class="lg:text-8xl text-5xl font-bold font-[WDXL_Lubrifont_TC]">.docx to .html converter</h1>
     </header>
 
     <dialog class="modal" id="instructions-modal">
       <div class="modal-box max-w-3xl">
         <h1 class="text-4xl font-bold mb-4">Instructions</h1>
-        <p class="text-lg mb-2 text-left">
-          This tool allows you to convert a .docx file to HTML using Pandoc
-          WASM.
-        </p>
+        <p class="text-lg mb-2 text-left">This tool allows you to convert a .docx file to HTML using Pandoc WASM.</p>
         <ol class="list-decimal list-inside text-lg mb-4 text-left">
-          <li>
-            Click the "Choose File" button to select a .docx file from your
-            computer.
-          </li>
-          <li>
-            After selecting the file, the content will be automatically
-            converted to HTML.
-          </li>
+          <li>Click the "Choose File" button to select a .docx file from your computer.</li>
+          <li>After selecting the file, the content will be automatically converted to HTML.</li>
 
           <li>Copy the HTML content from the text area for your use.</li>
         </ol>
@@ -66,73 +53,43 @@
       </div>
     </dialog>
 
-    <main
-      class="md:w-9/12 w-11/12 text-center flex flex-col items-center justify-center"
-    >
-      <div
-        class="w-11/12 md:w-9/12 flex flex-col items-center justify-center mt-8"
-      >
+    <main class="md:w-9/12 w-11/12 text-center flex flex-col items-center justify-center">
+      <div class="w-11/12 md:w-9/12 flex flex-col items-center justify-center mt-8">
         <form id="upload-form" class="space-y-3">
-          <input
-            type="file"
-            id="upload"
-            accept=".docx"
-            class="file-input w-full"
-          />
+          <input type="file" id="upload" accept=".docx" class="file-input w-full" />
           <button
+            type="button"
             id="instructions"
             class="btn active:scale-[97%] btn-neutral btn-soft w-full"
             onclick="document.querySelector('dialog').showModal()"
           >
             View Instructions
           </button>
-          <button
-            class="btn active:scale-[97%] w-full btn-neutral btn-soft disabled"
-            id="form-convert"
-            disabled
-          >
+          <button class="btn active:scale-[97%] w-full btn-neutral btn-soft disabled" id="form-convert" disabled>
             Convert
           </button>
         </form>
 
         <textarea
           id="output"
-          rows="20"
-          cols="80"
+          cols="30"
           readonly
           resize="none"
-          class="textarea hidden w-full mt-4 font-[IBM_Plex_Mono] text-left"
+          class="textarea hidden w-full h-64 textarea-sm mt-4 font-[IBM_Plex_Mono] text-left"
         ></textarea>
 
-        <div
-          id="btn-group"
-          class="w-full mt-4 hidden flex-col items-center space-y-2"
-        >
-          <div class="grid grid-cols-3 w-full">
-            <button
-              id="minify"
-              class="btn active:scale-[97%] btn-neutral soft mr-1"
-            >
-              Minify
-            </button>
-            <button
-              id="copy"
-              class="btn active:scale-[97%] btn-neutral soft mx-1"
-            >
-              Copy HTML
-            </button>
-            <button
-              id="download"
-              class="btn active:scale-[97%] btn-neutral soft ml-1"
-            >
-              Download HTML
-            </button>
+        <div id="btn-group" class="w-full mt-4 hidden flex-col items-center space-y-2">
+          <div class="grid grid-cols-2 w-full">
+            <button id="minify" class="btn btn-sm active:scale-[97%] mr-1 btn-neutral soft">Minify</button>
+            <button id="beautify" class="btn btn-sm active:scale-[97%] ml-1 btn-neutral soft">Beautify</button>
           </div>
+          <div class="grid grid-cols-2 w-full">
+            <button id="copy" class="btn btn-sm active:scale-[97%] mr-1 btn-neutral soft">Copy HTML</button>
+            <button id="download" class="btn active:scale-[97%] btn-sm ml-1 btn-neutral soft">Download HTML</button>
+          </div>
+
           <div class="w-full">
-            <button
-              class="btn active:scale-[97%] btn-neutral soft w-full"
-              id="convert-another"
-            >
+            <button class="btn active:scale-[97%] btn-sm btn-neutral soft w-full" id="convert-another">
               Convert another file
             </button>
           </div>
@@ -140,15 +97,11 @@
       </div>
     </main>
     <footer class="text-center mt-8">
-      <p>
-        Made by Jason Benoit and Aaron Po for the OER Design Studio at Fanshawe
-        College.
-      </p>
+      <p>Made by Jason Benoit and Aaron Po for the OER Design Studio at Fanshawe College.</p>
 
       <p>
         This project is open source and available on
-        <a href="#" class="text-blue-500 hover:underline">GitHub</a>. It is
-        licensed under the MIT License.
+        <a href="#" class="text-blue-500 hover:underline">GitHub</a>. It is licensed under the MIT License.
       </p>
     </footer>
 

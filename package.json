@@ -10,8 +10,8 @@
   },
   "devDependencies": {
     "daisyui": "^5.0.43",
-    "vite": "^6.3.5",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "vite": "^6.3.5"
   },
   "dependencies": {
     "@bjorn3/browser_wasi_shim": "^0.4.1",

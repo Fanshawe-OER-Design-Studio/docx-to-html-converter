@@ -1,177 +1,80 @@
-//  @ts-nocheck
-import {
-  WASI,
-  OpenFile,
-  File,
-  ConsoleStdout,
-  PreopenDirectory,
-} from "@bjorn3/browser_wasi_shim";
+import { convert } from './convert-form/docxToHTML';
 
-const instructionsBtn = document.getElementById(
-  "instructions"
-) as HTMLButtonElement;
+const instructionsBtn = document.getElementById('instructions') as HTMLButtonElement;
+const output = document.getElementById('output') as HTMLElement;
+const outputToolGroup = document.getElementById('btn-group') as HTMLElement;
 
-const form = document.getElementById("upload-form") as HTMLFormElement;
-const output = document.getElementById("output") as HTMLElement;
-let fileInput = document.getElementById("upload") as HTMLInputElement;
-const btnGroup = document.getElementById("btn-group") as HTMLElement;
-const convertAnotherBtn = document.getElementById(
-  "convert-another"
-) as HTMLButtonElement;
+const formSubmitBtn = document.getElementById('form-convert') as HTMLButtonElement;
 
-const formConvert = document.getElementById(
-  "form-convert"
-) as HTMLButtonElement;
-
-fileInput.addEventListener("change", () => {
+const fileInput = document.getElementById('upload') as HTMLInputElement;
+fileInput.addEventListener('change', () => {
   if (fileInput.files && fileInput.files.length > 0) {
-    formConvert.disabled = false;
-    formConvert.classList.remove("disabled");
+    formSubmitBtn.disabled = false;
+    formSubmitBtn.classList.remove('disabled');
   } else {
-    formConvert.disabled = true;
-    formConvert.classList.add("disabled");
+    formSubmitBtn.disabled = true;
+    formSubmitBtn.classList.add('disabled');
   }
 });
 
-const successModal = document.getElementById(
-  "success-modal"
-) as HTMLDialogElement;
-
-const minifyBtn = document.getElementById("minify") as HTMLButtonElement;
-const copyBtn = document.getElementById("copy") as HTMLButtonElement;
-
-copyBtn.addEventListener("click", () => {
-  if (output.textContent) {
-    navigator.clipboard.writeText(output.textContent).then(() => {
-      successModal.showModal();
-    });
-  } else {
-    alert("No output to copy.");
+const successModal = document.getElementById('success-modal') as HTMLDialogElement;
+const copyBtn = document.getElementById('copy') as HTMLButtonElement;
+copyBtn.addEventListener('click', () => {
+  if (!output.textContent) {
+    return;
   }
+  navigator.clipboard.writeText(output.textContent).then(() => {
+    successModal.showModal();
+  });
+  output.focus();
 });
 
-minifyBtn.addEventListener("click", () => {
+const minifyBtn = document.getElementById('minify') as HTMLButtonElement;
+minifyBtn.addEventListener('click', () => {
   if (output.textContent) {
-    const minifiedHtml = output.textContent.replace(/\s+/g, " ").trim();
+    const minifiedHtml = output.textContent.replace(/\s+/g, ' ').trim();
     output.textContent = minifiedHtml;
   } else {
-    output.textContent = "No output to minify.";
+    output.textContent = 'No output to minify.';
   }
 });
 
-convertAnotherBtn.addEventListener("click", () => {
-  form.classList.remove("hidden");
-
-  fileInput.value = ""; // Clear the file input value
-  output.classList.add("hidden");
-  output.textContent = "";
-  btnGroup.classList.add("hidden");
-  btnGroup.classList.remove("flex");
-  instructionsBtn.classList.remove("hidden");
+const convertAnotherBtn = document.getElementById('convert-another') as HTMLButtonElement;
+convertAnotherBtn.addEventListener('click', () => {
+  form.classList.remove('hidden');
+  fileInput.value = ''; // Clear the file input value
+  output.classList.add('hidden');
+  output.textContent = '';
+  outputToolGroup.classList.add('hidden');
+  outputToolGroup.classList.remove('flex');
+  instructionsBtn.classList.remove('hidden');
 });
 
-const downloadBtn = document.getElementById("download") as HTMLButtonElement;
-downloadBtn.addEventListener("click", () => {
+const downloadBtn = document.getElementById('download') as HTMLButtonElement;
+downloadBtn.addEventListener('click', () => {
   if (output.textContent) {
-    const blob = new Blob([output.textContent], { type: "text/html" });
+    const blob = new Blob([output.textContent], { type: 'text/html' });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
+    const a = document.createElement('a');
     a.href = url;
-    a.download = "output.html";
+    a.download = 'output.html';
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
   } else {
-    alert("No output to download.");
+    alert('No output to download.');
   }
 });
 
-async function convert(inputBytes: Uint8Array<ArrayBuffer>) {
-  // 1. Prepare virtual WASI files
-  // inputFile contains the raw .docx bytes
-  const inputFile = new File(inputBytes, "input.docx", {
-    readonly: true,
-  });
-  // outputFile will hold the output html bytes
-  const outputFile = new File(new Uint8Array(), "output.html", {
-    readonly: false,
-  });
-
-  // Setup file descriptors (stdin, stdout, stderr, and virtual directories)
-  const fds = [
-    new OpenFile(new File(new Uint8Array(), { readonly: true })), // stdin
-    ConsoleStdout.lineBuffered(
-      (msg) => (output.textContent += `[stdout] ${msg}\n`)
-    ),
-    ConsoleStdout.lineBuffered(
-      (msg) => (output.textContent += `[stderr] ${msg}\n`)
-    ),
-    new PreopenDirectory("/", [
-      ["in", inputFile],
-      ["out", outputFile],
-    ]),
-  ];
-
-  const wasiArgs = ["pandoc.wasm", "+RTS", "-H64m", "-RTS"];
-
-  // 3. Load WASI and instantiate WASM
-  const wasi = new WASI(wasiArgs, [], fds, { debug: false });
-  const { instance } = await WebAssembly.instantiateStreaming(
-    fetch("https://tweag.github.io/pandoc-wasm/pandoc.wasm"),
-    { wasi_snapshot_preview1: wasi.wasiImport }
-  );
-
-  wasi.initialize(instance);
-  instance.exports.__wasm_call_ctors();
-
-  const encoder = new TextEncoder();
-
-  const pandocArgsString = "-f docx -t html";
-
-  function memory_data_view() {
-    return new DataView(instance.exports.memory.buffer);
-  }
-
-  const argc_ptr = instance.exports.malloc(4);
-  memory_data_view().setUint32(argc_ptr, wasiArgs.length, true);
-  const argv = instance.exports.malloc(4 * (wasiArgs.length + 1));
-  for (let i = 0; i < wasiArgs.length; ++i) {
-    const arg = instance.exports.malloc(wasiArgs[i].length + 1);
-    new TextEncoder().encodeInto(
-      wasiArgs[i],
-      new Uint8Array(instance.exports.memory.buffer, arg, wasiArgs[i].length)
-    );
-    memory_data_view().setUint8(arg + wasiArgs[i].length, 0);
-    memory_data_view().setUint32(argv + 4 * i, arg, true);
-  }
-  memory_data_view().setUint32(argv + 4 * wasiArgs.length, 0, true);
-  const argv_ptr = instance.exports.malloc(4);
-  memory_data_view().setUint32(argv_ptr, argv, true);
-
-  instance.exports.hs_init_with_rtsopts(argc_ptr, argv_ptr);
-  const encoded = new TextEncoder().encode(pandocArgsString);
-  const argsPtr = instance.exports.malloc(encoded.length + 1);
-  const argsBuf = new Uint8Array(
-    instance.exports.memory.buffer,
-    argsPtr,
-    encoded.length + 1
-  );
-  argsBuf.set(encoded);
-  argsBuf[encoded.length] = 0;
-
-  // Call main
-  instance.exports.wasm_main(argsPtr, encoded.length);
-
-  // 7. Read the output from the virtual output file
-  const htmlData = outputFile.data;
-
-  return new TextDecoder().decode(htmlData);
-}
-
-form.addEventListener("submit", async (event) => {
+const form = document.getElementById('upload-form') as HTMLFormElement;
+form.addEventListener('submit', async (event) => {
   event.preventDefault();
-  output.textContent = "";
+  output.textContent = '';
+
+  fileInput.disabled = true;
+  formSubmitBtn.disabled = true;
+  instructionsBtn.disabled = true;
 
   const file = fileInput.files?.[0];
   if (!file) return;
@@ -179,19 +82,22 @@ form.addEventListener("submit", async (event) => {
   const inputBytes = new Uint8Array(await file.arrayBuffer());
 
   try {
-    const html = await convert(inputBytes);
+    const html = await convert(inputBytes, output);
 
-    output.classList.remove("hidden");
-    btnGroup.classList.remove("hidden");
-    btnGroup.classList.add("flex");
+    output.classList.remove('hidden');
+    outputToolGroup.classList.remove('hidden');
+    outputToolGroup.classList.add('flex');
 
-    form.classList.add("hidden");
-    form.classList.remove("flex");
-    instructionsBtn.classList.add("hidden");
+    form.classList.add('hidden');
+    form.classList.remove('flex');
+    instructionsBtn.classList.add('hidden');
 
-    output.textContent += "\n--- OUTPUT FILE ---\n" + html;
+    instructionsBtn.disabled = false;
+    output.textContent += html;
+    fileInput.disabled = false;
+    formSubmitBtn.disabled = true;
   } catch (err) {
     output.textContent = `Error: ${(err as Error).message}`;
-    output.classList.remove("hidden");
+    output.classList.remove('hidden');
   }
 });
