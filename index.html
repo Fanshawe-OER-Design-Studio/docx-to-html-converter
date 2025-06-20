@@ -1,15 +1,43 @@
+<!--
+MIT License
+
+Copyright (c) 2025 Aaron Po and Jason Benoit
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+-->
+
 <!DOCTYPE html>
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>Pandoc WASM DOCX to HTML Demo</title>
+    <title>Fanshawe College OER Design Studio | docx to html converter</title>
+    <meta
+      name="description"
+      content="Convert .docx files to HTML using Pandoc in the browser. No server-side processing required. Just upload your .docx file and get the HTML output instantly."
+    />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="./src/styles.css" />
   </head>
 
   <body class="flex flex-col items-center justify-center min-h-[100dvh] w-[100dvw]">
     <header class="text-center w-full mt-10">
-      <h1 class="lg:text-8xl text-5xl font-bold font-[WDXL_Lubrifont_TC]">.docx to .html converter</h1>
+      <h1 class="lg:text-8xl text-5xl font-[WDXL_Lubrifont_TC]">.docx to .html converter</h1>
     </header>
 
     <dialog class="modal" id="instructions-modal">
@@ -53,9 +81,9 @@
       </div>
     </dialog>
 
-    <main class="md:w-9/12 w-11/12 text-center flex flex-col items-center justify-center">
-      <div class="w-11/12 md:w-9/12 flex flex-col items-center justify-center mt-8">
-        <form id="upload-form" class="space-y-3">
+    <main class="md:w-10/12 w-11/12 text-center flex flex-col items-center justify-center">
+      <div class="w-11/12 md:w-10/12 flex flex-col items-center justify-center mt-8">
+        <form id="upload-form" class="space-y-3 w-9/12">
           <input type="file" id="upload" accept=".docx" class="file-input w-full" />
           <button
             type="button"
@@ -75,21 +103,21 @@
           cols="30"
           readonly
           resize="none"
-          class="textarea hidden w-full h-64 textarea-sm mt-4 font-[IBM_Plex_Mono] text-left"
+          class="textarea hidden w-full h-96 textarea-md mt-4 font-[IBM_Plex_Mono] text-left"
         ></textarea>
 
         <div id="btn-group" class="w-full mt-4 hidden flex-col items-center space-y-2">
           <div class="grid grid-cols-2 w-full">
-            <button id="minify" class="btn btn-sm active:scale-[97%] mr-1 btn-neutral soft">Minify</button>
-            <button id="beautify" class="btn btn-sm active:scale-[97%] ml-1 btn-neutral soft">Beautify</button>
+            <button id="minify" class="btn active:scale-[97%] mr-1 btn-neutral soft">Minify</button>
+            <button id="beautify" class="btn active:scale-[97%] ml-1 btn-neutral soft">Beautify</button>
           </div>
           <div class="grid grid-cols-2 w-full">
-            <button id="copy" class="btn btn-sm active:scale-[97%] mr-1 btn-neutral soft">Copy HTML</button>
-            <button id="download" class="btn active:scale-[97%] btn-sm ml-1 btn-neutral soft">Download HTML</button>
+            <button id="copy" class="btn active:scale-[97%] mr-1 btn-neutral soft">Copy HTML</button>
+            <button id="download" class="btn active:scale-[97%] ml-1 btn-neutral soft">Download HTML</button>
           </div>
 
           <div class="w-full">
-            <button class="btn active:scale-[97%] btn-sm btn-neutral soft w-full" id="convert-another">
+            <button class="btn active:scale-[97%] btn-neutral soft w-full" id="convert-another">
               Convert another file
             </button>
           </div>

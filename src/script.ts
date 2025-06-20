@@ -1,12 +1,36 @@
+/*
+MIT License
+
+Copyright (c) 2025 Aaron Po and Jason Benoit
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
+
 import { convert } from './convert-form/docxToHTML';
+import beautify from 'js-beautify';
 
 const instructionsBtn = document.getElementById('instructions') as HTMLButtonElement;
 const output = document.getElementById('output') as HTMLElement;
 const outputToolGroup = document.getElementById('btn-group') as HTMLElement;
-
 const formSubmitBtn = document.getElementById('form-convert') as HTMLButtonElement;
-
 const fileInput = document.getElementById('upload') as HTMLInputElement;
+
 fileInput.addEventListener('change', () => {
   if (fileInput.files && fileInput.files.length > 0) {
     formSubmitBtn.disabled = false;
@@ -99,5 +123,23 @@ form.addEventListener('submit', async (event) => {
   } catch (err) {
     output.textContent = `Error: ${(err as Error).message}`;
     output.classList.remove('hidden');
+  }
+});
+
+const beautifyBtn = document.getElementById('beautify') as HTMLButtonElement;
+beautifyBtn.addEventListener('click', () => {
+  if (!output.textContent) {
+    output.textContent = 'No output to beautify.';
+    return;
+  }
+
+  try {
+    const beautifiedHtml = beautify.html(output.textContent, {
+      indent_size: 4,
+      wrap_line_length: 70,
+    });
+    output.textContent = beautifiedHtml;
+  } catch (err) {
+    output.textContent = `Error beautifying HTML: ${(err as Error).message}`;
   }
 });
