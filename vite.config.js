@@ -13,5 +13,5 @@ const licenseText = `/*!
 
 export default defineConfig({
   plugins: [tailwindcss(), banner2(() => licenseText)],
-  base: '/pandoc-webapp/',
+  base: '/docx-to-html-converter/',
 });
