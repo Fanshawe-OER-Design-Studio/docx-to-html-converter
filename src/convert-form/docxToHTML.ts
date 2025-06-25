@@ -55,7 +55,7 @@ export async function convert(inputBytes: Uint8Array<ArrayBuffer>, outputElement
 
   // 3. Load WASI and instantiate WASM
   const wasi = new WASI(wasiArgs, [], fds, { debug: false });
-  const { instance } = await WebAssembly.instantiateStreaming(fetch('/pandoc-webapp/pandoc.wasm'), {
+  const { instance } = await WebAssembly.instantiateStreaming(fetch(import.meta.env.BASE_URL + 'pandoc.wasm'), {
     wasi_snapshot_preview1: wasi.wasiImport,
   });
 
