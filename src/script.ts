@@ -1,7 +1,7 @@
 /*
 MIT License
 
-Copyright (c) 2025 Aaron Po and Jason Benoit
+Copyright (c) 2025 Fanshawe College OER Design Studio
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -91,9 +91,16 @@ downloadBtn.addEventListener('click', () => {
   }
 });
 
+const errorModal = document.getElementById('error-modal') as HTMLDialogElement;
 const form = document.getElementById('upload-form') as HTMLFormElement;
 form.addEventListener('submit', async (event) => {
   event.preventDefault();
+
+  if (!fileInput.files || fileInput.files.length === 0) {
+    errorModal.showModal();
+    return;
+  }
+
   output.textContent = '';
 
   fileInput.disabled = true;
@@ -121,8 +128,7 @@ form.addEventListener('submit', async (event) => {
     fileInput.disabled = false;
     formSubmitBtn.disabled = true;
   } catch (err) {
-    output.textContent = `Error: ${(err as Error).message}`;
-    output.classList.remove('hidden');
+    errorModal.showModal();
   }
 });
 
