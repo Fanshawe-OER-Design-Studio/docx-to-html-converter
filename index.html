@@ -1,7 +1,7 @@
 <!--
 MIT License
 
-Copyright (c) 2025 Aaron Po and Jason Benoit
+Copyright (c) 2025 Fanshawe College OER Design Studio
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -32,12 +32,12 @@ SOFTWARE.
       content="Convert .docx files to HTML using Pandoc in the browser. No server-side processing required. Just upload your .docx file and get the HTML output instantly."
     />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script type="module" crossorigin src="/docx-to-html-converter/assets/index-q1vX_Ujp.js"></script>
-    <link rel="stylesheet" crossorigin href="/docx-to-html-converter/assets/index-DoT_OSQC.css">
+    <script type="module" crossorigin src="/docx-to-html-converter/assets/index-D6OP7H9J.js"></script>
+    <link rel="stylesheet" crossorigin href="/docx-to-html-converter/assets/index-C8pWDlks.css">
   </head>
 
   <body class="flex flex-col items-center justify-center min-h-[100dvh] w-[100dvw]">
-    <header class="text-center w-full mt-10">
+    <header class="text-center w-11/12 mt-10">
       <h1 class="lg:text-8xl text-5xl font-[WDXL_Lubrifont_TC]">.docx to .html converter</h1>
     </header>
 
@@ -47,9 +47,9 @@ SOFTWARE.
         <p class="text-lg mb-2 text-left">This tool allows you to convert a .docx file to HTML using Pandoc WASM.</p>
         <ol class="list-decimal list-inside text-lg mb-4 text-left">
           <li>Click the "Choose File" button to select a .docx file from your computer.</li>
-          <li>After selecting the file, the content will be automatically converted to HTML.</li>
-
-          <li>Copy the HTML content from the text area for your use.</li>
+          <li>After selecting a file, click convert.</li>
+          <li>Once converted, you can download, copy, minify or beautify (format) the HTML content.</li>
+          <li>If you wish to convert another file, click the "Convert another file" button.</li>
         </ol>
 
         <div class="modal-action">
@@ -82,21 +82,41 @@ SOFTWARE.
       </div>
     </dialog>
 
+    <dialog class="modal" id="error-modal">
+      <div class="modal-box max-w-3xl">
+        <h1 class="text-4xl font-bold mb-4">Error</h1>
+        <p class="text-lg mb-2 text-left">
+          An error occurred while processing your request. Please ensure you have selected a valid .docx file and try
+          again.
+          <br />
+          If the problem persists, please let us know.
+        </p>
+        <div class="modal-action">
+          <button
+            class="btn active:scale-[97%] btn-ghost"
+            id="dialog-btn"
+            type="button"
+            onclick="document.querySelector('#error-modal').close()"
+          >
+            OK
+          </button>
+        </div>
+      </div>
+    </dialog>
+
     <main class="md:w-10/12 w-11/12 text-center flex flex-col items-center justify-center">
       <div class="w-11/12 md:w-10/12 flex flex-col items-center justify-center mt-8">
-        <form id="upload-form" class="space-y-3 w-9/12">
+        <form id="upload-form" class="space-y-3 md:w-9/12 w-full">
           <input type="file" id="upload" accept=".docx" class="file-input w-full" />
           <button
             type="button"
             id="instructions"
-            class="btn active:scale-[97%] btn-neutral btn-soft w-full"
+            class="btn active:scale-[97%] w-full"
             onclick="document.querySelector('dialog').showModal()"
           >
             View Instructions
           </button>
-          <button class="btn active:scale-[97%] w-full btn-neutral btn-soft disabled" id="form-convert" disabled>
-            Convert
-          </button>
+          <button class="btn active:scale-[97%] w-full" id="form-convert" disabled>Convert</button>
         </form>
 
         <textarea
@@ -125,12 +145,16 @@ SOFTWARE.
         </div>
       </div>
     </main>
-    <footer class="text-center mt-8">
+    <footer class="text-center mt-8 w-11/12">
       <p>Made by Jason Benoit and Aaron Po for the OER Design Studio at Fanshawe College.</p>
 
       <p>
         This project is open source and available on
-        <a href="https://github.com/Fanshawe-OER-Design-Studio/docx-to-html-converter" class="text-blue-500 hover:underline">GitHub</a>. It is licensed under the MIT License.
+        <a
+          href="https://github.com/Fanshawe-OER-Design-Studio/docx-to-html-converter"
+          class="text-blue-500 hover:underline"
+          >GitHub</a
+        >. It is licensed under the MIT License.
       </p>
     </footer>
 
